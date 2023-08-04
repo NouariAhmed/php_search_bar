@@ -24,23 +24,16 @@
 
                 <div class="text-center">
                     <?php
-                $host = "localhost";
-                $dbname = "YOUR DATABASE NAME";
-                $username = "root";
-                $password = "";
-
-                // Open a new database connection
-                $conn = mysqli_connect($host, $username, $password, $dbname);
-                if (!$conn) {
-                    die("Connection failed: " . mysqli_connect_error());
-                }
+                    // better to call connect directly ! 
+                    include('connect.php')
+              
 
                     if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         // Get the search query from the form submission
                         $searchQuery = $_POST["search_query"];
 
                         // Perform the database search using a parameterized query
-                        $sql = "SELECT * FROM files WHERE username LIKE ?";
+                        $sql = "SELECT * FROM articles WHERE title LIKE ?";
                         $stmt = mysqli_prepare($conn, $sql);
                         $searchQueryWithWildcard = "%" . mysqli_real_escape_string($conn, $searchQuery) . "%";
                         mysqli_stmt_bind_param($stmt, "s", $searchQueryWithWildcard);
@@ -56,7 +49,7 @@
                             echo "<div class='list-group'>";
                             while ($row = mysqli_fetch_assoc($result)) {
                                 // Display each search result as a list item
-                                echo "<a href='#' class='list-group-item list-group-item-action'>" . htmlspecialchars($row['username']) . "</a>";
+                                echo "<a href='#' class='list-group-item list-group-item-action'>" . htmlspecialchars($row['title']) . "</a>";
                             }
                             echo "</div>";
                         } 
